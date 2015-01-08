@@ -2,7 +2,16 @@
 Pymple - A simple Inversion of Control container for Python
 ===========================================================
 
-Required: Python 3
+.. image:: https://travis-ci.org/owncloud/ocdev.svg
+    :target: https://travis-ci.org/owncloud/ocdev
+
+Installation
+============
+This library is a Python 3 library.
+
+Install it via pip for Python 3:
+
+    sudo pip3 install pymple
 
 Usage
 =====
