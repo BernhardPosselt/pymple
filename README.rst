@@ -25,7 +25,7 @@ Install it via pip for Python 3::
 
 Usage
 =====
-Pymple nows three types of parameters:
+Pymple knows three types of parameters:
 
 * Values: A value is simply value that is saved and reused for all other factories/singletons
 * Singletons: A singleton is a **callable** that is executed once and the result is saved so future calls to the build method will return the same instance
