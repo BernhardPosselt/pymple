@@ -1,4 +1,4 @@
-from pymple.container import Container
+from pymple.container import Container, BuildException
 
 def inject(**kwargs):
     def injector(klass):

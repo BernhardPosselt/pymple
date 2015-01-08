@@ -2,8 +2,8 @@ import unittest
 import sys
 from os.path import dirname, abspath
 
-from pymple import inject
-from pymple.container import Container, Factory, BuildException
+from pymple import inject, Container, BuildException
+from pymple.container import Factory
 
 class A:
     pass
