@@ -7,9 +7,9 @@ Pymple - A simple Inversion of Control container for Python
 
 Why
 ===
-If you search Inversion of Control containers for Python, very often the argument comes up that "Python is dynamic and does not need things static languages need". This is partly true.
+If you search for Inversion of Control containers for Python you often encounter the argument "Python is dynamic and does not need those things that static languages need". This is partly true.
 
-Dependency Injection and Inversion of Control is a pattern and not a language feature. It not only makes your code easier to test, but also way more readable. The dependencies are clearly noted in the constructor and your IDEs will give you autocompletion support. If you need to test a class, it is clear where and how to pass in the mocked services.
+Dependency Injection and Inversion of Control is a pattern and not a language feature. It not only makes your code easier to test, but also way more readable. The dependencies are clearly noted in the constructor and your IDEs will give you autocompletion support. If you need to test a class, it is clear where and how to pass in the mocks.
 
 Therefore Inversion and Control and Dependency Injection (which go hand in hand) should also be practiced in dynamic languages. If you think this is not viable, check out `AngularJS <http://angularjs.org/>`_ which also makes use of the above mentioned patterns in a dynamic programming language, namely JavaScript.
 
