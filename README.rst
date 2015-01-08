@@ -32,8 +32,8 @@ Pymple knows three types of parameters:
 * Factories: A factory is **callable** that is executed again everytime it is accessed
 
 
-Setting a value
----------------
+Registering a value
+-------------------
 
 .. code:: python
 
@@ -45,8 +45,8 @@ Setting a value
   container.build('my_int') == 2 # True
 
 
-Setting a Singleton
--------------------
+Registering a Singleton
+-----------------------
 
 .. code:: python
 
@@ -63,8 +63,8 @@ Setting a Singleton
   container.build(MyClass) == container.build(MyClass) # True
   container.build(MyClass).value == 2 # True
 
-Setting a Factory
------------------
+Registering a Factory
+---------------------
 
 .. code:: python
 
