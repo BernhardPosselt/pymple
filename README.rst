@@ -27,19 +27,36 @@ Pymple nows three types of parameters:
   from pymple.container import Container
 
   # register simple values
-  container.register('param', 2)
-  container.build('param') == 2 # True
+  container.register('value', 2)
+  container.build('value') == 2 # True
 
   # register singletons
   class MyClass:
-      def __init__(self, value):
-          self.value = value
+    def __init__(self, value):
+      self.value = value
 
-  container.register_singleton('MyClass', lambda x: MyClass(x.build('param')))
+  container.register_singleton('MyClass', lambda x: MyClass(x.build('value')))
   container.build('MyClass') == container.build('MyClass') # True
   container.build('MyClass').value == 2 # True
 
   # register factories (no instance will be saved)
-  container.register_factory('MyClass', lambda x: MyClass(x.build('param')))
+  container.register_factory('MyClass', lambda x: MyClass(x.build('value')))
   container.build('MyClass') == container.build('MyClass') # False
   container.build('MyClass').value == 2 # True
+
+Extending the container
+=======================
+You can also extend the container to make it reusable:
+
+.. code:: python
+
+  from pymple.container import Container
+
+  class MyContainer(Container):
+
+    def __init(self):
+      super().__init__()
+      self.register('value', 3)
+
+  container = MyContainer()
+  container.build('value') == 3 # True
