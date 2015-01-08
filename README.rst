@@ -9,7 +9,7 @@ Installation
 ============
 This library is a Python 3 library.
 
-Install it via pip for Python 3:
+Install it via pip for Python 3::
 
     sudo pip3 install pymple
 
