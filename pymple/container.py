@@ -35,10 +35,6 @@ class Container:
 
     def build(self, key):
         value = self.registry[key]
-
-        # Check if it is a factory which should not save instances
-        # save already instantiate classes
         if isinstance(value, Factory):
             value = value(self)
-
         return value
