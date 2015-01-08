@@ -32,8 +32,10 @@ Pymple nows three types of parameters:
 
   # register singletons
   class MyClass:
-    def __init__(self, value):
-      self.value = value
+
+      def __init__(self, value):
+          self.value = value
+
 
   container.register_singleton('MyClass', lambda x: MyClass(x.build('value')))
   container.build('MyClass') == container.build('MyClass') # True
@@ -54,9 +56,10 @@ You can also extend the container to make it reusable:
 
   class MyContainer(Container):
 
-    def __init(self):
-      super().__init__()
-      self.register('value', 3)
+      def __init(self):
+          super().__init__()
+          self.register('value', 3)
+
 
   container = MyContainer()
   container.build('value') == 3 # True
