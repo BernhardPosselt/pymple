@@ -7,6 +7,18 @@ class Factory:
         return self.factory(container)
 
 
+class Singleton(Factory):
+
+    def __init__(self, factory):
+        super().__init__(factory)
+        self.value = None
+
+    def __call__(self, container):
+        if self.value == None:
+            self.value = super().__call__(container)
+        return self.value
+
+
 class Container:
 
     def __init__(self):
@@ -18,6 +30,9 @@ class Container:
     def register_factory(self, key, factory):
         self.registry[key] = Factory(factory)
 
+    def register_singleton(self, key, factory):
+        self.registry[key] = Singleton(factory)
+
     def build(self, key):
         value = self.registry[key]
 
@@ -26,13 +41,4 @@ class Container:
         if isinstance(value, Factory):
             value = value(self)
 
-        elif self._is_lambda(value):
-            value = value(self)
-            self.registry[key] = value
-
         return value
-
-    def _is_lambda(self, value):
-        lbda = lambda: None
-        return isinstance(value, type(lbda)) and \
-               value.__name__ == (lbda).__name__

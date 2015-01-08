@@ -24,22 +24,22 @@ Pymple nows three types of parameters:
 
 .. code:: python
 
-    from pymple.container import Container
+  from pymple.container import Container
 
-    # register simple values
-    container.register('param', 2)
-    container.build('param') == 2 # True
+  # register simple values
+  container.register('param', 2)
+  container.build('param') == 2 # True
 
-    # register singletons
-    class MyClass:
-        def __init__(self, value):
-            self.value = value
+  # register singletons
+  class MyClass:
+      def __init__(self, value):
+          self.value = value
 
-    container.register('MyClass', lambda x: MyClass(x.build('param')))
-    container.build('MyClass') == container.build('MyClass') # True
-    container.build('MyClass').value == 2 # True
+  container.register_singleton('MyClass', lambda x: MyClass(x.build('param')))
+  container.build('MyClass') == container.build('MyClass') # True
+  container.build('MyClass').value == 2 # True
 
-    # register factories (no instance will be saved)
-    container.register_factory('MyClass', lambda x: MyClass(x.build('param')))
-    container.build('MyClass') == container.build('MyClass') # False
-    container.build('MyClass').value == 2 # True
+  # register factories (no instance will be saved)
+  container.register_factory('MyClass', lambda x: MyClass(x.build('param')))
+  container.build('MyClass') == container.build('MyClass') # False
+  container.build('MyClass').value == 2 # True
