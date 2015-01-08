@@ -18,16 +18,7 @@ class Container:
 
     def __init__(self):
         self._factories = {}
-        self._values = {}
-
-
-    def __enter__(self):
-        return self
-
-
-    def __exit__(self, type, value, tb):
-        self._values = {}
-
+        self._values = []
 
     def value(self, key, val):
         self._values[key] = val
@@ -66,8 +57,8 @@ class Container:
                 try:
                     value = key()
                 except TypeError as e:
-                    msg = '%s is neither a class nor function or does not \
-                          receive all required parameters: %s' % (key, e)
+                    msg = (('%s is neither a class nor function or does not '
+                          'receive all required parameters: %s') % (key, e))
                     raise BuildException(msg)
 
             self.value(key, value)

@@ -12,7 +12,7 @@ class B:
     def __init__(self, b):
         self.b = b
 
-@inject(value1=A, value2='int')
+@inject(value1=A, value2='ints')
 class C:
     def __init__(self, value1, value2):
         self.value1 = value1
@@ -48,19 +48,12 @@ class ContainerTest(unittest.TestCase):
     def test_inject(self):
         # set current path for import to work
         sys.path.append(dirname(abspath(__file__)))
-        self.container.value('int', 3)
-        self.assertEqual({'value1': A, 'value2': 'int'}, C._inject)
+        self.container.value('ints', 3)
+        self.assertEqual({'value1': A, 'value2': 'ints'}, C._inject)
         c = self.container.build(C)
         self.assertEqual(self.container.build(A), c.value1)
         self.assertEqual(3, c.value2)
 
-
-    def test_lifetime(self):
-        self.container.value('int', 3)
-        with self.container as c:
-            self.assertEqual(3, c.build('int'))
-        with self.assertRaises(BuildException):
-            c.build('int')
 
 if __name__ == '__main__':
     unittest.main()
