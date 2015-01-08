@@ -18,7 +18,8 @@ class Container:
 
     def __init__(self):
         self._factories = {}
-        self._values = []
+        self._values = {}
+
 
     def value(self, key, val):
         self._values[key] = val
