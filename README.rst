@@ -66,8 +66,7 @@ Instead of registering all values in the container, you can try to let the conta
   isinstance(a, A) # True
 
 
-This works if the constructor is empty. If the constructor is not empty, the container needs a map from parameter value to container value as a static **_inject** attribute on the class. This attribute can be set with the **@inject**
-
+This works if the constructor is empty. If the constructor is not empty, the container needs a map from parameter value to container value as a static **_inject** attribute on the class. This attribute can be set with the **@inject** decorator:
 
 .. code:: python
 
