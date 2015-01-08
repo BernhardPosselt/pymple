@@ -83,7 +83,7 @@ This works if the constructor is empty. If the constructor is not empty, the con
   container.register('param', 3)
   c = container.build('module.file.C')
 
-  from some.module.A import A
+  from some.module import A
   isinstance(c.value, A) # True
   c.value2 == 3 # True
 
