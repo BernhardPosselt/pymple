@@ -52,17 +52,14 @@ Instead of registering all values in the container, you can try to let the conta
 
 .. code:: python
 
-  # in module some.module
+  from pymple import Container
+
   class A:
       pass
 
-  # somewhere else
-  from pymple import Container
-
   container = Container()
-  a = container.build('some.module.A')
+  a = container.build(A)
 
-  from some.module.A import A
   isinstance(a, A) # True
 
 
@@ -71,8 +68,9 @@ This works if the constructor is empty. If the constructor is not empty, the con
 .. code:: python
 
   from pymple import inject, Container
+  from some.module import A
 
-  @inject(value='some.module.A', value2='param')
+  @inject(value=A, value2='param')
   class C:
 
       def __init__(self, value, value2):
@@ -81,9 +79,8 @@ This works if the constructor is empty. If the constructor is not empty, the con
 
   container = Container()
   container.register('param', 3)
-  c = container.build('module.file.C')
+  c = container.build(C)
 
-  from some.module import A
   isinstance(c.value, A) # True
   c.value2 == 3 # True
 

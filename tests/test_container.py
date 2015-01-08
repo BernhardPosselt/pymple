@@ -12,7 +12,7 @@ class B:
     def __init__(self, b):
         self.b = b
 
-@inject(value1='test_container.A', value2='B')
+@inject(value1=A, value2='int')
 class C:
     def __init__(self, value1, value2):
         self.value1 = value1
@@ -45,18 +45,14 @@ class ContainerTest(unittest.TestCase):
         self.assertEqual(value1, value2)
         self.assertNotEqual(value1.b, self.container.build('A'))
 
-    def test_inject_no_existing_class(self):
-        with self.assertRaises(BuildException):
-            self.container.build('some.weird.module')
-
     def test_inject(self):
         # set current path for import to work
         sys.path.append(dirname(abspath(__file__)))
-        self.container.register_singleton('B', lambda x: B(x.build('test_container.A')))
-        self.assertEqual({'value1': 'test_container.A', 'value2': 'B'}, C._inject)
-        c = self.container.build('test_container.C')
-        self.assertEqual(self.container.build('test_container.A'), c.value1)
-        self.assertEqual(self.container.build('B'), c.value2)
+        self.container.register('int', 3)
+        self.assertEqual({'value1': A, 'value2': 'int'}, C._inject)
+        c = self.container.build(C)
+        self.assertEqual(self.container.build(A), c.value1)
+        self.assertEqual(3, c.value2)
 
 
 if __name__ == '__main__':

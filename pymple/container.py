@@ -46,20 +46,13 @@ class Container:
                 value = value(self)
         else:
             # try to create a class
-            try:
-                # try to separate some.module.klass to some.module and klass
-                paths = key.rsplit('.', 1)
-                klass = getattr(importlib.import_module(paths[0]), paths[1])
-            except ImportError:
-                raise BuildException('Could not import class %s' % key)
-
-            if hasattr(klass, '_inject'):
+            if hasattr(key, '_inject'):
                 parameters = {}
-                for parameter, value in klass._inject.items():
+                for parameter, value in key._inject.items():
                     parameters[parameter] = self.build(value)
-                value = klass(**parameters)
+                value = key(**parameters)
             else:
-                value = klass()
+                value = key()
             self.register(key, value)
 
         return value
