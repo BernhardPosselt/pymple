@@ -37,14 +37,14 @@ Pymple nows three types of parameters:
           self.value = value
 
 
-  container.register_singleton('MyClass', lambda x: MyClass(x.build('value')))
-  container.build('MyClass') == container.build('MyClass') # True
-  container.build('MyClass').value == 2 # True
+  container.register_singleton(MyClass, lambda x: MyClass(x.build('value')))
+  container.build(MyClass) == container.build(MyClass) # True
+  container.build(MyClass).value == 2 # True
 
   # register factories (no instance will be saved)
-  container.register_factory('MyClass', lambda x: MyClass(x.build('value')))
-  container.build('MyClass') == container.build('MyClass') # False
-  container.build('MyClass').value == 2 # True
+  container.register_factory(MyClass, lambda x: MyClass(x.build('value')))
+  container.build(MyClass) == container.build(MyClass) # False
+  container.build(MyClass).value == 2 # True
 
 Using the @inject decorator
 ===========================
