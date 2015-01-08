@@ -15,6 +15,13 @@ Therefore Inversion and Control and Dependency Injection (which go hand in hand)
 
 For further information watch `Google's Clean Code Talks <https://www.youtube.com/playlist?list=PL693EFD059797C21E>`_
 
+Limitations
+===========
+Pymple does currently not support:
+
+* Threadsafety
+* Lifetimes
+
 Installation
 ============
 This library is a Python 3.2+ library.
