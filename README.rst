@@ -16,7 +16,7 @@ Install it via pip for Python 3:
 Usage
 =====
 
-.. code-block:: python
+.. code:: python
     from pymple.container import Container
 
     # register simple values
