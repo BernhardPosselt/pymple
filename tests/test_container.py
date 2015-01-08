@@ -12,7 +12,7 @@ class B:
     def __init__(self, b):
         self.b = b
 
-@inject(value1='A', value2='B')
+@inject(value1='test_container.A', value2='B')
 class C:
     def __init__(self, value1, value2):
         self.value1 = value1
@@ -52,11 +52,10 @@ class ContainerTest(unittest.TestCase):
     def test_inject(self):
         # set current path for import to work
         sys.path.append(dirname(abspath(__file__)))
-        self.container.register_singleton('A', lambda x: A())
-        self.container.register_singleton('B', lambda x: B(x.build('A')))
-        self.assertEqual({'value1': 'A', 'value2': 'B'}, C._inject)
+        self.container.register_singleton('B', lambda x: B(x.build('test_container.A')))
+        self.assertEqual({'value1': 'test_container.A', 'value2': 'B'}, C._inject)
         c = self.container.build('test_container.C')
-        self.assertEqual(self.container.build('A'), c.value1)
+        self.assertEqual(self.container.build('test_container.A'), c.value1)
         self.assertEqual(self.container.build('B'), c.value2)
 
 

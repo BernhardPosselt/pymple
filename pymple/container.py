@@ -53,7 +53,7 @@ class Container:
             except ImportError:
                 raise BuildException('Could not import class %s' % key)
 
-            if klass._inject:
+            if hasattr(klass, '_inject'):
                 parameters = {}
                 for parameter, value in klass._inject.items():
                     parameters[parameter] = self.build(value)
