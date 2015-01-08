@@ -25,7 +25,7 @@ class Container:
         return self
 
 
-    def __exit__(self):
+    def __exit__(self, type, value, tb):
         self._values = {}
 
 
@@ -66,8 +66,8 @@ class Container:
                 try:
                     value = key()
                 except TypeError as e:
-                    msg = ('%s is neither a class nor function or does not ' +
-                          'receive all required parameters: %s' % (key, e))
+                    msg = '%s is neither a class nor function or does not \
+                          receive all required parameters: %s' % (key, e)
                     raise BuildException(msg)
 
             self.value(key, value)

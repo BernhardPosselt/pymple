@@ -55,5 +55,12 @@ class ContainerTest(unittest.TestCase):
         self.assertEqual(3, c.value2)
 
 
+    def test_lifetime(self):
+        self.container.value('int', 3)
+        with self.container as c:
+            self.assertEqual(3, c.build('int'))
+        with self.assertRaises(BuildException):
+            c.build('int')
+
 if __name__ == '__main__':
     unittest.main()
