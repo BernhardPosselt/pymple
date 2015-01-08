@@ -5,7 +5,7 @@ with open('README.rst', 'r') as infile:
 
 setup (
     name = 'pymple',
-    version = '0.0.2',
+    version = '0.0.3',
     description = 'A simple Inversion of Control container',
     long_description = long_description,
     author = 'Bernhard Posselt',
