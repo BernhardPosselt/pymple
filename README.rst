@@ -72,17 +72,20 @@ This works if the constructor is empty. If the constructor is not empty, the con
 
   from pymple import inject, Container
 
-  @inject(value='some.module.A')
+  @inject(value='some.module.A', value2='param')
   class C:
 
-      def __init__(self, value):
+      def __init__(self, value, value2):
         self.value = value
+        self.value2 = value2
 
   container = Container()
+  container.register('param', 3)
   c = container.build('module.file.C')
 
   from some.module.A import A
   isinstance(c.value, A) # True
+  c.value2 == 3 # True
 
 
 Extending the container
