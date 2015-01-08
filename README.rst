@@ -7,7 +7,7 @@ Pymple - A simple Inversion of Control container for Python
 
 Installation
 ============
-This library is a Python 3.2 library.
+This library is a Python 3.2+ library.
 
 Install it via pip for Python 3::
 
