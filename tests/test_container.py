@@ -1,5 +1,9 @@
 import unittest
-from pymple.container import Container, Factory
+import sys
+from os.path import dirname, abspath
+
+from pymple import inject
+from pymple.container import Container, Factory, BuildException
 
 class A:
     pass
@@ -7,6 +11,12 @@ class A:
 class B:
     def __init__(self, b):
         self.b = b
+
+@inject(value1='A', value2='B')
+class C:
+    def __init__(self, value1, value2):
+        self.value1 = value1
+        self.value2 = value2
 
 class ContainerTest(unittest.TestCase):
 
@@ -34,6 +44,20 @@ class ContainerTest(unittest.TestCase):
         self.assertTrue(isinstance(value1, B))
         self.assertEqual(value1, value2)
         self.assertNotEqual(value1.b, self.container.build('A'))
+
+    def test_inject_no_existing_class(self):
+        with self.assertRaises(BuildException):
+            self.container.build('some.weird.module')
+
+    def test_inject(self):
+        # set current path for import to work
+        sys.path.append(dirname(abspath(__file__)))
+        self.container.register_singleton('A', lambda x: A())
+        self.container.register_singleton('B', lambda x: B(x.build('A')))
+        self.assertEqual({'value1': 'A', 'value2': 'B'}, C._inject)
+        c = self.container.build('test_container.C')
+        self.assertEqual(self.container.build('A'), c.value1)
+        self.assertEqual(self.container.build('B'), c.value2)
 
 
 if __name__ == '__main__':

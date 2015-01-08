@@ -24,7 +24,7 @@ Pymple nows three types of parameters:
 
 .. code:: python
 
-  from pymple.container import Container
+  from pymple import Container
 
   # register simple values
   container.register('value', 2)
@@ -45,6 +45,46 @@ Pymple nows three types of parameters:
   container.register_factory('MyClass', lambda x: MyClass(x.build('value')))
   container.build('MyClass') == container.build('MyClass') # False
   container.build('MyClass').value == 2 # True
+
+Using the @inject decorator
+===========================
+Instead of registering all values in the container, you can try to let the container assemble the class automatically
+
+.. code:: python
+
+  # in module some.module
+  class A:
+      pass
+
+  # somewhere else
+  from pymple import Container
+
+  container = Container()
+  a = container.build('some.module.A')
+
+  from some.module.A import A
+  isinstance(a, A) # True
+
+
+This works if the constructor is empty. If the constructor is not empty, the container needs a map from parameter value to container value as a static **_inject** attribute on the class. This attribute can be set with the **@inject**
+
+
+.. code:: python
+
+  from pymple import inject, Container
+
+  @inject(value='some.module.A')
+  class C:
+
+      def __init__(self, value):
+        self.value = value
+
+  container = Container()
+  c = container.build('module.file.C')
+
+  from some.module.A import A
+  isinstance(c.value, A) # True
+
 
 Extending the container
 =======================
