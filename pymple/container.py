@@ -11,45 +11,65 @@ class Factory:
 
 
 class Singleton(Factory):
-
-    def __init__(self, factory):
-        super().__init__(factory)
-        self.value = None
-
-    def __call__(self, container):
-        if self.value == None:
-            self.value = super().__call__(container)
-        return self.value
+    pass
 
 
 class Container:
 
     def __init__(self):
-        self.registry = {}
+        self._factories = {}
+        self._values = {}
 
-    def register(self, key, value):
-        self.registry[key] = value
 
-    def register_factory(self, key, factory):
-        self.registry[key] = Factory(factory)
+    def __enter__(self):
+        return self
 
-    def register_singleton(self, key, factory):
-        self.registry[key] = Singleton(factory)
+
+    def __exit__(self):
+        self._values = {}
+
+
+    def value(self, key, val):
+        self._values[key] = val
+
+
+    def factory(self, key, factory):
+        self._factories[key] = Factory(factory)
+
+
+    def singleton(self, key, factory):
+        self._factories[key] = Singleton(factory)
+
 
     def build(self, key):
-        if key in self.registry:
-            value = self.registry[key]
-            if isinstance(value, Factory):
-                value = value(self)
+        # if a value is already saved return it
+        if key in self._values:
+            value = self._values[key]
+
+        # if no value is saved, construct it
+        elif key in self._factories:
+            factory = self._factories[key]
+            value = factory(self)
+
+            # save singleton instances
+            if isinstance(factory, Singleton):
+                self._values[key] = value
+
+        # finally if no factory is registered, create an instance if possible
         else:
-            # try to create a class
             if hasattr(key, '_inject'):
                 parameters = {}
                 for parameter, value in key._inject.items():
                     parameters[parameter] = self.build(value)
                 value = key(**parameters)
             else:
-                value = key()
-            self.register(key, value)
+                try:
+                    value = key()
+                except TypeError as e:
+                    msg = ('%s is neither a class nor function or does not ' +
+                          'receive all required parameters: %s' % (key, e))
+                    raise BuildException(msg)
+
+            self.value(key, value)
 
         return value

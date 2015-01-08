@@ -24,12 +24,12 @@ class ContainerTest(unittest.TestCase):
         self.container = Container()
 
     def test_parameter(self):
-        self.container.register('Test', 2)
+        self.container.value('Test', 2)
         self.assertEqual(2, self.container.build('Test'))
 
     def test_register(self):
-        self.container.register_singleton('A', lambda x: A())
-        self.container.register_singleton('B', lambda x: B(x.build('A')))
+        self.container.singleton('A', lambda x: A())
+        self.container.singleton('B', lambda x: B(x.build('A')))
         value1 = self.container.build('B')
         value2 = self.container.build('B')
         self.assertTrue(isinstance(value1, B))
@@ -37,8 +37,8 @@ class ContainerTest(unittest.TestCase):
         self.assertEqual(value1.b, value2.b)
 
     def test_factory(self):
-        self.container.register_factory(A, lambda x: A())
-        self.container.register_singleton('B', lambda x: B(x.build(A)))
+        self.container.factory(A, lambda x: A())
+        self.container.singleton('B', lambda x: B(x.build(A)))
         value1 = self.container.build('B')
         value2 = self.container.build('B')
         self.assertTrue(isinstance(value1, B))
@@ -48,7 +48,7 @@ class ContainerTest(unittest.TestCase):
     def test_inject(self):
         # set current path for import to work
         sys.path.append(dirname(abspath(__file__)))
-        self.container.register('int', 3)
+        self.container.value('int', 3)
         self.assertEqual({'value1': A, 'value2': 'int'}, C._inject)
         c = self.container.build(C)
         self.assertEqual(self.container.build(A), c.value1)

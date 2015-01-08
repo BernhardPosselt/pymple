@@ -32,29 +32,55 @@ Pymple knows three types of parameters:
 * Factories: A factory is **callable** that is executed again everytime it is accessed
 
 
+Setting a value
+---------------
+
 .. code:: python
 
   from pymple import Container
 
-  # register simple values
-  container.register('value', 2)
-  container.build('value') == 2 # True
+  with Container() as container:
+      container.value('my_int', 2)
 
-  # register singletons
+      container.build('my_int') == 2 # True
+
+
+Setting a Singleton
+-------------------
+
+.. code:: python
+
+  from pymple import Container
+
   class MyClass:
-
       def __init__(self, value):
           self.value = value
 
+  with Container() as container:
+      container.value('my_int', 2)
+      container.singleton(MyClass, lambda x: MyClass(x.build('my_int')))
 
-  container.register_singleton(MyClass, lambda x: MyClass(x.build('value')))
-  container.build(MyClass) == container.build(MyClass) # True
-  container.build(MyClass).value == 2 # True
+      container.build(MyClass) == container.build(MyClass) # True
+      container.build(MyClass).value == 2 # True
 
-  # register factories (no instance will be saved)
-  container.register_factory(MyClass, lambda x: MyClass(x.build('value')))
-  container.build(MyClass) == container.build(MyClass) # False
-  container.build(MyClass).value == 2 # True
+Setting a Factory
+-----------------
+
+.. code:: python
+
+  from pymple import Container
+
+  class MyClass:
+      def __init__(self, value):
+          self.value = value
+
+  with Container() as container:
+      container.value('my_int', 2)
+      container.factory(MyClass, lambda x: MyClass(x.build('my_int')))
+
+      container.build(MyClass) == container.build(MyClass) # False
+      container.build(MyClass).value == 2 # True
+
 
 Using the @inject decorator
 ===========================
@@ -67,10 +93,10 @@ Instead of registering all values in the container, you can try to let the conta
   class A:
       pass
 
-  container = Container()
-  a = container.build(A)
+  with Container() as container:
+      a = container.build(A)
 
-  isinstance(a, A) # True
+      isinstance(a, A) # True
 
 
 This works if the constructor is empty. If the constructor is not empty, the container needs a map from parameter value to container value as a static **_inject** attribute on the class. This attribute can be set with the **@inject** decorator:
@@ -87,9 +113,9 @@ This works if the constructor is empty. If the constructor is not empty, the con
         self.value = value
         self.value2 = value2
 
-  container = Container()
-  container.register('param', 3)
-  c = container.build(C)
+  with Container() as container:
+      container.value('param', 3)
+      c = container.build(C)
 
   isinstance(c.value, A) # True
   c.value2 == 3 # True
@@ -107,8 +133,9 @@ You can also extend the container to make it reusable:
 
       def __init(self):
           super().__init__()
-          self.register('value', 3)
+          self.value('value', 3)
+          # etc
 
 
-  container = MyContainer()
-  container.build('value') == 3 # True
+  with Container() as container:
+      container.build('value') == 3 # True
