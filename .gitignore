@@ -1,0 +1,7 @@
+PKG-INFO
+*pyc
+*~
+__pycache__
+build
+dist
+pymple.egg-info
