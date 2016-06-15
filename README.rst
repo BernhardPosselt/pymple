@@ -55,7 +55,8 @@ By default Pymple tries to resolved a singleton based on the annotated type, e.g
   b = container.resolve(B)
   isinstance(b.a, A) == True
 
-# Overriding The Default Behavior
+Overriding The Default Behavior
+===============================
 However you can also override it by defining it explicitly:
 
 .. code:: python
@@ -76,7 +77,8 @@ The first passed in variable to the lambda is the container instance itself, so 
   b = container.resolve(B)
   isinstance(b.a, A) == True
 
-# Registering Factories
+Registering Factories
+=====================
 If you want to register a factory instead of a singleton, simple pass False as the second parameter:
 
 .. code:: python
@@ -88,7 +90,8 @@ If you want to register a factory instead of a singleton, simple pass False as t
   c = container.resolve(B)
   b != c
 
-# Aliasing
+Aliasing
+========
 Sometimes a type interface uses an abstract class as type annotation. In that case you can simply define an alias:
 
 .. code:: python
