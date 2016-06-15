@@ -1,9 +1,9 @@
 ===========================================================
-Pymple - A simple Inversion of Control container for Python
+Pymple - A Simple Inversion of Control Container For Python
 ===========================================================
 
-.. image:: https://travis-ci.org/owncloud/ocdev.svg
-    :target: https://travis-ci.org/owncloud/ocdev
+.. image:: https://travis-ci.org/BernhardPosselt/pymple.svg?branch=master
+    :target: https://travis-ci.org/BernhardPosselt/pymple
 
 Why
 ===
@@ -24,7 +24,7 @@ Pymple does currently not support:
 
 Installation
 ============
-This library is a Python 3.2+ library.
+This library is a Python 3.4+ library. On Python 3.4 however the **typings** package is required.
 
 Install it via pip for Python 3::
 
@@ -32,117 +32,70 @@ Install it via pip for Python 3::
 
 Usage
 =====
-Pymple knows three types of parameters:
+Pymple knows two types of parameters:
 
-* Values: A value is simply value that is saved and reused for all other factories/singletons
 * Singletons: A singleton is a **callable** that is executed once and the result is saved so future calls to the build method will return the same instance
-* Factories: A factory is **callable** that is executed again everytime it is accessed
+* Factories: A factory is **callable** that is executed again every time it is accessed
 
-
-Registering a value
--------------------
-
-.. code:: python
-
-  from pymple import Container
-
-  container = Container()
-  container.value('my_int', 2)
-
-  container.build('my_int') == 2 # True
-
-
-Registering a Singleton
------------------------
-
-.. code:: python
-
-  from pymple import Container
-
-  class MyClass:
-      def __init__(self, value):
-          self.value = value
-
-  container = Container()
-  container.value('my_int', 2)
-  container.singleton(MyClass, lambda x: MyClass(x.build('my_int')))
-
-  container.build(MyClass) == container.build(MyClass) # True
-  container.build(MyClass).value == 2 # True
-
-Registering a Factory
----------------------
-
-.. code:: python
-
-  from pymple import Container
-
-  class MyClass:
-      def __init__(self, value):
-          self.value = value
-
-  container = Container()
-  container.value('my_int', 2)
-  container.factory(MyClass, lambda x: MyClass(x.build('my_int')))
-
-  container.build(MyClass) == container.build(MyClass) # False
-  container.build(MyClass).value == 2 # True
-
-
-Using the @inject decorator
-===========================
-Instead of registering all values in the container, you can try to let the container assemble the class automatically
+By default Pymple tries to resolved a singleton based on the annotated type, e.g.:
 
 .. code:: python
 
   from pymple import Container
 
   class A:
-      pass
+      def __init__(self):
+          pass
+
+  class B:
+      def __init__(self, param: A):
+          self.a = A
 
   container = Container()
-      a = container.build(A)
+  b = container.resolve(B)
+  isinstance(b.a, A) == True
 
-      isinstance(a, A) # True
-
-
-This works if the constructor is empty. If the constructor is not empty, the container needs a map from parameter value to container value as a static **_inject** attribute on the class. This attribute can be set with the **@inject** decorator:
+# Overriding The Default Behavior
+However you can also override it by defining it explicitly:
 
 .. code:: python
 
-  from pymple import inject, Container
-  from some.module import A
-
-  @inject(value=A, value2='param')
-  class C:
-
-      def __init__(self, value, value2):
-          self.value = value
-          self.value2 = value2
-
   container = Container()
-  container.value('param', 3)
-  c = container.build(C)
+  ccontainer.register(B, lambda c: B('hi'))
 
-  isinstance(c.value, A) # True
-  c.value2 == 3 # True
+  b = container.resolve(B)
+  b.a == 'hi'
 
-
-Extending the container
-=======================
-You can also extend the container to make it reusable:
+The first passed in variable to the lambda is the container instance itself, so you can also resolve other classes on it:
 
 .. code:: python
 
-  from pymple.container import Container
+  container = Container()
+  ccontainer.register(B, lambda c: B(c.resolve(A)))
 
-  class MyContainer(Container):
+  b = container.resolve(B)
+  isinstance(b.a, A) == True
 
-      def __init(self):
-          super().__init__()
-          self.value('value', 3)
-          # etc
+# Registering Factories
+If you want to register a factory instead of a singleton, simple pass False as the second parameter:
 
+.. code:: python
 
   container = Container()
-  container.build('value') == 3 # True
+  ccontainer.register(B, lambda c: B('hi'), False)
+
+  b = container.resolve(B)
+  c = container.resolve(B)
+  b != c
+
+# Aliasing
+Sometimes a type interface uses an abstract class as type annotation. In that case you can simply define an alias:
+
+.. code:: python
+
+  container = Container()
+  ccontainer.alias(ConcreteClass, AbstractClass)
+
+  clazz = container.resolve(AbstractClass)
+  isinstance(clazz, ConcreteClass) == True
+
