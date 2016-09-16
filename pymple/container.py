@@ -1,5 +1,7 @@
-from typing import Callable, Any
+from typing import Callable, Any, TypeVar
 from typing import Dict
+
+T = TypeVar('T')
 
 
 class ResolveException(Exception):
@@ -54,7 +56,7 @@ class Container:
         else:
             self._factories[key] = Factory(factory)
 
-    def resolve(self, key: Any) -> Any:
+    def resolve(self, key: T) -> T:
         """
         Fetches an instance or creates one using the registered factory method
         :argument key the key to look up
