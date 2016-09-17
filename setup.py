@@ -27,5 +27,12 @@ setup(
     license='GPL',
     keywords=['pymple', 'ioc', 'inversion of control', 'container',
               'dependency injection'],
+    classifiers=[
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU General Public License v3 or later ('
+        'GPLv3+)',
+        'Programming Language :: Python :: 3 :: Only',
+        'Topic :: Software Development :: Libraries',
+    ],
     test_suite='tests',
 )
