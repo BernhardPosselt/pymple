@@ -1,4 +1,4 @@
-from typing import Callable, Any, TypeVar
+from typing import Callable, Any, TypeVar, Type
 from typing import Dict
 
 T = TypeVar('T')
@@ -38,7 +38,7 @@ class Container:
         self._singletons = {}  # type: Dict[Any, Any]
         self._factories = {}  # type: Dict[Any, Factory]
 
-    def register(self, key: Any, factory: Callable[['Container'], Any],
+    def register(self, key: Type[T], factory: Callable[['Container'], T],
                  shared: bool = True) -> None:
         """
         Registers a factory function for creating the class
@@ -56,7 +56,7 @@ class Container:
         else:
             self._factories[key] = Factory(factory)
 
-    def resolve(self, key: T) -> T:
+    def resolve(self, key: Type[T]) -> T:
         """
         Fetches an instance or creates one using the registered factory method
         :argument key the key to look up
@@ -82,7 +82,7 @@ class Container:
         else:
             return self._singletons[key]
 
-    def alias(self, source: type, target: Any) -> Any:
+    def alias(self, source: Type[T], target: Type[T]) -> None:
         """
         Point a key to another key
         :argument source the key to resolve when the target is requested
@@ -97,7 +97,7 @@ class Container:
         :argument clazz the class to instantiate
         :return the instantiated class
         """
-        arguments = {}
+        arguments = {}  # type: Dict[str, Any]
         if hasattr(clazz.__init__, '__annotations__'):
             annotations = clazz.__init__.__annotations__
             for name, type_hint in annotations.items():

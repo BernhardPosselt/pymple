@@ -7,25 +7,30 @@ class A:
     pass
 
 
+class D(A):
+    pass
+
+
 class B:
-    def __init__(self, param: A):
+    def __init__(self, param: A) -> None:
         self.param = param
 
 
 class C:
-    def __init__(self, param: B):
+    def __init__(self, param: B) -> None:
         self.param = param
 
 
 class TestContainer(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.container = Container()
 
-    def test_register(self):
-        self.container.register(A, lambda c: 'swapped out')
-        self.assertEqual('swapped out', self.container.resolve(B).param)
+    def test_register(self) -> None:
+        d = D()
+        self.container.register(A, lambda c: d)
+        self.assertEqual(d, self.container.resolve(B).param)
 
-    def test_resolve(self):
+    def test_resolve(self) -> None:
         a = self.container.resolve(A)
         self.assertIsInstance(a, A)
 
@@ -33,7 +38,7 @@ class TestContainer(TestCase):
         self.assertIsInstance(b, B)
         self.assertIsInstance(b.param, A)
 
-    def test_resolve_shared(self):
+    def test_resolve_shared(self) -> None:
         self.container.register(A, lambda c: A(), False)
 
         a1 = self.container.resolve(A)
@@ -42,7 +47,7 @@ class TestContainer(TestCase):
         self.assertIsInstance(a2, A)
         self.assertNotEqual(a1, a2)
 
-    def test_alias(self):
+    def test_alias(self) -> None:
         self.container.alias(A, B)
         a = self.container.resolve(B)
         self.assertIsInstance(a, A)
